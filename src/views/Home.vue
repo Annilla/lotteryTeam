@@ -14,12 +14,12 @@
     <div class="randonList">
       <div class="wrapCircle">
         <ul class="avatarList">
+          <div class="animateCircle"></div>
           <li v-for="a in lotteryList" :key="a.name">
-            <div class="avatar" :style='`background-image: url(${a.avator})`'>
-            {{ a.name }}
-            </div>
+            <div class="avatar" :style="`background-image: url(${a.avator})`"></div>
           </li>
         </ul>
+        <div class="winner display-3">{{ winner }}</div>
         <v-btn color="error" @click="randomLot">Start</v-btn>
       </div>
     </div>
@@ -27,43 +27,80 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-// import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component({
   components: {
-    // HelloWorld,
-  }
+  },
 })
 export default class Home extends Vue {
   // initial data
-  lotteryList = this.$store.state.lotteryList;
-  winner = null;
+  private prevIndex = -1;
+  private lotteryList = this.$store.state.lotteryList;
+  private winner = 'Ready';
 
   /**
    * Delay 延遲秒數
    */
-  delayTime (interval: number) {
+  private delayTime(interval: number) {
     return new Promise((resolve) => {
-        setTimeout(resolve, interval);
+      setTimeout(resolve, interval);
     });
+  }
+
+  /**
+   * Random Index
+   */
+  private randomIndex() {
+    const max = this.lotteryList.length - 1;
+    const min = 0;
+    return Math.floor(Math.random() * max) + min;
   }
 
   /**
    * Random lottery
    */
-  async randomLot() {
-    let nextDelay = 100;
-    let retryNumber = 50;
-    let max = this.lotteryList.length - 1;
-    let min = 0;
+  private async randomLot() {
+    const nextDelay = 500;
+    const retryNumber = 5;
+    const circle = document.querySelector('.animateCircle') as HTMLElement;
+    const winner = document.querySelector('.winner') as HTMLElement;
 
-    // for (let i = 0; i < retryNumber; i++) {
-    //   let ranIndex = Math.floor(Math.random() * max) + min; 
-    //   // 延遲 nextDelay 秒後
-    //   await this.delayTime(nextDelay);
-    //   this.winner = this.lotteryList[ranIndex];
-    // }
+    if(this.prevIndex >= 0) {
+      const lastone = document.querySelectorAll('.avatarList .avatar')[this.prevIndex] as HTMLElement;
+      lastone.classList.add('hide');
+    }
+
+    // Hide winner
+    winner.classList.remove('show');
+    // Show Circle
+    circle.classList.add('show');
+
+    for (let i = 0; i < retryNumber; i++) {
+      let ranIndex = this.randomIndex();
+
+      while (this.prevIndex === ranIndex) { // 數字不能跟上次一樣
+        ranIndex = this.randomIndex();
+      }
+
+      const avatar = document.querySelectorAll('.avatarList .avatar')[ranIndex] as HTMLElement;
+      const top = avatar.offsetTop;
+      const left = avatar.offsetLeft;
+      const width = avatar.offsetWidth;
+      const height = avatar.offsetHeight;
+
+      // 延遲 nextDelay 秒後
+      await this.delayTime(nextDelay);
+      circle.style.top = `${top - 5}px`;
+      circle.style.left = `${left - 5}px`;
+      circle.style.width = `${width + 10}px`;
+      circle.style.height = `${height + 10}px`;
+      this.prevIndex = ranIndex;
+    }
+
+    this.winner = this.lotteryList[this.prevIndex].name;
+    // Show winner
+    winner.classList.add('show');
   }
 }
 </script>
@@ -95,20 +132,72 @@ export default class Home extends Vue {
 
     .wrapCircle {
       position: relative;
-      margin: 10% auto 0 auto;
-      width: 500px;
-      height: 500px;
-      border-radius: 50%;
+      width: 70%;
+      padding: 30px;
+      margin: 50px auto 0 auto;
+      border-radius: 50px;
       background-color: rgba(0, 0, 0, 0.5);
 
       ul.avatarList {
-        padding-top: 40%;
-        padding-bottom: 50px;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: center;
+
         li {
-          list-style none
+          list-style: none;
+          display: flex;
+          flex: 0 0 calc(25% - 20px);
+          margin: 10px;
+
+          .avatar {
+            width: 10vw;
+            height: 10vw;
+            max-width: 150px;
+            max-height: 150px;
+            margin: 0 auto;
+            border-radius: 50%;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            transition: .5s;
+            &.hide {
+              opacity: 0.5;
+            }
+          }
+        }
+
+        .animateCircle {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          border: 5px solid white;
+          opacity: 0;
+          transition: .5s;
+          &.show {
+            opacity: 1;
+          }
+        }
+
+      }
+
+      .winner {
+        width: 60%;
+        margin: 20px auto;
+        border-radius: 50px;
+        background-color: black;
+        opacity: 0;
+        transition: .5s;
+        transition-delay: .5s;
+        &.show {
+          opacity: 1;
         }
       }
     }
+
   }
 }
 </style>

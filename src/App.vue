@@ -26,12 +26,12 @@ import Settings from '@/components/Settings.vue'; // @ is an alias to /src
   },
 })
 export default class App extends Vue {
-  $refs!: {
-    Settings: HTMLFormElement
-  }
+  public $refs!: {
+    Settings: HTMLFormElement,
+  };
 
   // methods
-  openSettings () {
+  private openSettings() {
     this.$refs.Settings.dialog = true;
   }
 }
@@ -39,6 +39,6 @@ export default class App extends Vue {
 
 <style lang="stylus">
 .theme--dark.application {
-  background black
+  background: black !important;
 }
 </style>

@@ -8,23 +8,35 @@ export default new Vuex.Store({
     lotteryList: [
       {
         name: 'Anny Chang',
-        avator: 'https://api.adorable.io/avatars/285/AnnyChang.png'
+        avator: 'https://api.adorable.io/avatars/200/AnnyChang.png',
       },
       {
         name: 'Bruce Chen',
-        avator: 'https://api.adorable.io/avatars/285/BruceChen.png'
+        avator: 'https://api.adorable.io/avatars/200/BruceChen.png',
+      },
+      {
+        name: 'Carl Yang',
+        avator: 'https://api.adorable.io/avatars/200/CarlYang.png',
+      },
+      {
+        name: 'Danny Lai',
+        avator: 'https://api.adorable.io/avatars/200/DannyLai.png',
       },
       {
         name: 'Edward Kuo',
-        avator: 'https://api.adorable.io/avatars/285/EdwardKuo.png'
+        avator: 'https://api.adorable.io/avatars/200/EdwardKuo.png',
       },
       {
         name: 'Gina Chiu',
-        avator: 'https://api.adorable.io/avatars/285/GinaChiu.png'
+        avator: 'https://api.adorable.io/avatars/200/GinaChiu.png',
       },
       {
         name: 'Katrina Chuang',
-        avator: 'https://api.adorable.io/avatars/285/KatrinaChuang.png'
+        avator: 'https://api.adorable.io/avatars/200/KatrinaChuang.png',
+      },
+      {
+        name: 'Poy Chang',
+        avator: 'https://api.adorable.io/avatars/200/PoyChang.png',
       },
     ],
   },
