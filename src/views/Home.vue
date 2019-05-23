@@ -20,7 +20,12 @@
           </li>
         </ul>
         <div class="winner display-3">{{ winner }}</div>
-        <v-btn color="error" @click="randomLot">Start</v-btn>
+        <v-btn v-if="lotteryList.length !== isWinned.length" color="error"
+              :loading="btnLoading"
+              :disabled="btnLoading"
+              @click="randomLot">
+          Start
+        </v-btn>
       </div>
     </div>
   </div>
@@ -34,13 +39,18 @@ import { Component, Vue } from 'vue-property-decorator';
   },
 })
 export default class Home extends Vue {
+
   // initial data
-  private prevIndex = -1;
-  private lotteryList = this.$store.state.lotteryList;
-  private winner = 'Ready';
+  private btnLoading = false;
+  private ranIndex = -1;
+  private lotteryList: any[] = this.$store.state.lotteryList;
+  private isWinned: any[] = [];
+  private noWinned: any[] = this.$store.state.lotteryList;
+  private winner: string = 'Ready';
 
   /**
    * Delay 延遲秒數
+   * @param {Number} interval 毫秒數
    */
   private delayTime(interval: number) {
     return new Promise((resolve) => {
@@ -52,9 +62,9 @@ export default class Home extends Vue {
    * Random Index
    */
   private randomIndex() {
-    const max = this.lotteryList.length - 1;
-    const min = 0;
-    return Math.floor(Math.random() * max) + min;
+    const max = this.noWinned.length;
+    const noWinnedIndex = Math.floor(Math.random() * max);
+    return this.lotteryList.indexOf(this.noWinned[noWinnedIndex]);
   }
 
   /**
@@ -66,8 +76,12 @@ export default class Home extends Vue {
     const circle = document.querySelector('.animateCircle') as HTMLElement;
     const winner = document.querySelector('.winner') as HTMLElement;
 
-    if(this.prevIndex >= 0) {
-      const lastone = document.querySelectorAll('.avatarList .avatar')[this.prevIndex] as HTMLElement;
+    // Start Process...
+    this.btnLoading = true;
+
+    // Lastone avator half opacity
+    if (this.ranIndex >= 0) {
+      const lastone = document.querySelectorAll('.avatarList .avatar')[this.ranIndex] as HTMLElement;
       lastone.classList.add('hide');
     }
 
@@ -77,13 +91,9 @@ export default class Home extends Vue {
     circle.classList.add('show');
 
     for (let i = 0; i < retryNumber; i++) {
-      let ranIndex = this.randomIndex();
+      this.ranIndex = this.randomIndex();
 
-      while (this.prevIndex === ranIndex) { // 數字不能跟上次一樣
-        ranIndex = this.randomIndex();
-      }
-
-      const avatar = document.querySelectorAll('.avatarList .avatar')[ranIndex] as HTMLElement;
+      const avatar = document.querySelectorAll('.avatarList .avatar')[this.ranIndex] as HTMLElement;
       const top = avatar.offsetTop;
       const left = avatar.offsetLeft;
       const width = avatar.offsetWidth;
@@ -95,12 +105,18 @@ export default class Home extends Vue {
       circle.style.left = `${left - 5}px`;
       circle.style.width = `${width + 10}px`;
       circle.style.height = `${height + 10}px`;
-      this.prevIndex = ranIndex;
     }
 
-    this.winner = this.lotteryList[this.prevIndex].name;
+    this.winner = this.lotteryList[this.ranIndex].name;
     // Show winner
     winner.classList.add('show');
+    // Put winner in isWinned, remove from noWinned list
+    this.isWinned.push(this.lotteryList[this.ranIndex]);
+    this.noWinned = this.noWinned.filter((el) => {
+                      return el !== this.lotteryList[this.ranIndex];
+                    });
+    // Stop Process...
+    this.btnLoading = false;
   }
 }
 </script>
