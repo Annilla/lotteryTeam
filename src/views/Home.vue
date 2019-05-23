@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" id="Home">
     <div class="videoWrapper">
       <iframe
         class="YTbg"
@@ -15,11 +15,14 @@
       <div class="wrapCircle">
         <ul class="avatarList">
           <div class="animateCircle"></div>
-          <li v-for="a in lotteryList" :key="a.name">
-            <div class="avatar" :style="`background-image: url(${a.avator})`"></div>
+          <li v-for="(a, i) in lotteryList" :key="a.name">
+            <div class="avatar"
+                :style="`background-image: url(${a.avator})`"
+                @click="toggleWinner(a, i)">
+            </div>
           </li>
         </ul>
-        <div class="winner display-3">{{ winner }}</div>
+        <div class="winner display-3 show">{{ winner }}</div>
         <v-btn v-if="lotteryList.length !== isWinned.length" color="error"
               :loading="btnLoading"
               :disabled="btnLoading"
@@ -118,6 +121,52 @@ export default class Home extends Vue {
     // Stop Process...
     this.btnLoading = false;
   }
+
+  /**
+   * Toggle Winner
+   */
+  private toggleWinner(person: object, index: number) {
+    const a = document.querySelectorAll('.avatarList .avatar')[index] as HTMLElement;
+
+    // If object is in isWinned, change to noWinned.
+    if (this.isWinned.indexOf(person) > -1) {
+      this.noWinned.push(person);
+      this.isWinned = this.isWinned.filter((el) => {
+                      return el !== person;
+                    });
+      a.classList.remove('hide');
+    } else { // If object is in noWinned, change to isWinned.
+      this.isWinned.push(person);
+      this.noWinned = this.noWinned.filter((el) => {
+                      return el !== person;
+                    });
+      a.classList.add('hide');
+    }
+  }
+
+  /**
+   * Reset
+   */
+  private reset() {
+      const avatars = document.querySelectorAll('.avatarList .avatar');
+      const circle = document.querySelector('.animateCircle') as HTMLElement;
+
+      // Hide Circle
+      circle.classList.remove('show');
+
+      // Show all avatars
+      for(let i = 0; i < avatars.length; i++) {
+        avatars[i].classList.remove('hide');
+      }
+
+      // Reset Values
+      this.btnLoading = false;
+      this.ranIndex = -1;
+      this.lotteryList = this.$store.state.lotteryList;
+      this.isWinned = [];
+      this.noWinned = this.$store.state.lotteryList;
+      this.winner = 'Ready';
+  }
 }
 </script>
 
@@ -177,6 +226,7 @@ export default class Home extends Vue {
             background-position: center;
             background-size: cover;
             transition: .5s;
+            cursor: pointer;
             &.hide {
               opacity: 0.5;
             }
