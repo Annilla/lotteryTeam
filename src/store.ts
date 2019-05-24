@@ -1,3 +1,5 @@
+/* tslint:disable:max-line-length */
+
 import Vue from 'vue';
 import Vuex from 'vuex';
 
@@ -12,7 +14,7 @@ export default new Vuex.Store({
       },
       {
         name: 'Bruce Chen',
-        avator: 'https://kingstono365-my.sharepoint.com/personal/annychang_kingstono365_onmicrosoft_com/Documents/%E9%9B%9C%E9%A0%85/xmas/2019/bruce.png',
+        avator: 'https://kingstono365-my.sharepoint.com/personal/annychang_kingstono365_onmicrosoft_com/Documents/%E9%9B%9C%E9%A0%85/xmas/2019/bruce.png?2',
       },
       {
         name: 'Carl Yang',
@@ -24,19 +26,19 @@ export default new Vuex.Store({
       },
       {
         name: 'Edward Kuo',
-        avator: 'https://api.adorable.io/avatars/200/EdwardKuo.png',
+        avator: 'https://kingstono365-my.sharepoint.com/personal/annychang_kingstono365_onmicrosoft_com/Documents/%E9%9B%9C%E9%A0%85/xmas/2019/edward.png',
       },
       {
         name: 'Gina Chiu',
-        avator: 'https://api.adorable.io/avatars/200/GinaChiu.png',
+        avator: 'https://kingstono365-my.sharepoint.com/personal/annychang_kingstono365_onmicrosoft_com/Documents/%E9%9B%9C%E9%A0%85/xmas/2019/gina.png',
       },
       {
         name: 'Katrina Chuang',
-        avator: 'https://api.adorable.io/avatars/200/KatrinaChuang.png',
+        avator: 'https://kingstono365-my.sharepoint.com/personal/annychang_kingstono365_onmicrosoft_com/Documents/%E9%9B%9C%E9%A0%85/xmas/2019/katrina.png',
       },
       {
         name: 'Poy Chang',
-        avator: 'https://api.adorable.io/avatars/200/PoyChang.png',
+        avator: 'https://kingstono365-my.sharepoint.com/personal/annychang_kingstono365_onmicrosoft_com/Documents/%E9%9B%9C%E9%A0%85/xmas/2019/poy.png',
       },
     ],
   },

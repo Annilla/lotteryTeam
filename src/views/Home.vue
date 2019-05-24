@@ -13,6 +13,7 @@
     </div>
     <div class="randonList">
       <div class="wrapCircle">
+        <div class="winner display-3 show">{{ winner }}</div>
         <ul class="avatarList">
           <div class="animateCircle"></div>
           <li v-for="(a, i) in lotteryList" :key="a.name">
@@ -22,8 +23,9 @@
             </div>
           </li>
         </ul>
-        <div class="winner display-3 show">{{ winner }}</div>
-        <v-btn v-if="lotteryList.length !== isWinned.length" color="error"
+        <v-btn v-if="lotteryList.length !== isWinned.length"
+              color="error"
+              class="mt-5"
               :loading="btnLoading"
               :disabled="btnLoading"
               @click="randomLot">
@@ -75,7 +77,8 @@ export default class Home extends Vue {
    */
   private async randomLot() {
     const nextDelay = 500;
-    const retryNumber = 5;
+    const retryNumber = 10;
+    const border = 5;
     const circle = document.querySelector('.animateCircle') as HTMLElement;
     const winner = document.querySelector('.winner') as HTMLElement;
 
@@ -104,10 +107,10 @@ export default class Home extends Vue {
 
       // 延遲 nextDelay 秒後
       await this.delayTime(nextDelay);
-      circle.style.top = `${top - 5}px`;
-      circle.style.left = `${left - 5}px`;
-      circle.style.width = `${width + 10}px`;
-      circle.style.height = `${height + 10}px`;
+      circle.style.top = `${top - border}px`;
+      circle.style.left = `${left - border}px`;
+      circle.style.width = `${width + border * 2}px`;
+      circle.style.height = `${height + border * 2}px`;
     }
 
     this.winner = this.lotteryList[this.ranIndex].name;
@@ -155,8 +158,8 @@ export default class Home extends Vue {
       circle.classList.remove('show');
 
       // Show all avatars
-      for(let i = 0; i < avatars.length; i++) {
-        avatars[i].classList.remove('hide');
+      for (const avatar of avatars as any) {
+        avatar.classList.remove('hide');
       }
 
       // Reset Values
@@ -171,6 +174,15 @@ export default class Home extends Vue {
 </script>
 
 <style lang="stylus">
+@keyframes circleLight {
+  from {
+    box-shadow: 0 0 0 0px rgba(255, 255, 255, 0.5), 0 0 0 0px rgba(255, 255, 255, 0.2);
+  }
+  to {
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.5), 0 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+}
+
 .home {
   position: relative;
 
@@ -186,6 +198,7 @@ export default class Home extends Vue {
       left: 0;
       width: 100%;
       height: 100%;
+      filter: blur(3px);
     }
   }
 
@@ -199,9 +212,9 @@ export default class Home extends Vue {
       position: relative;
       width: 70%;
       padding: 30px;
-      margin: 50px auto 0 auto;
+      margin: 0 auto 0 auto;
       border-radius: 50px;
-      background-color: rgba(0, 0, 0, 0.5);
+      background-color: rgba(255, 255, 255, 0);
 
       ul.avatarList {
         display: flex;
@@ -227,8 +240,9 @@ export default class Home extends Vue {
             background-size: cover;
             transition: .5s;
             cursor: pointer;
+            box-shadow: 0px 0px 5px 5px rgba(255, 255, 255, 0.5);
             &.hide {
-              opacity: 0.5;
+              opacity: 0.1;
             }
           }
         }
@@ -241,6 +255,7 @@ export default class Home extends Vue {
           height: 10px;
           border-radius: 50%;
           border: 5px solid white;
+          animation: circleLight .5s linear 0s infinite alternate;
           opacity: 0;
           transition: .5s;
           &.show {
@@ -252,9 +267,9 @@ export default class Home extends Vue {
 
       .winner {
         width: 60%;
-        margin: 20px auto;
+        margin: 30px auto;
         border-radius: 50px;
-        background-color: black;
+        background-color: rgba(0, 0, 0, 0.3);
         opacity: 0;
         transition: .5s;
         transition-delay: .5s;
